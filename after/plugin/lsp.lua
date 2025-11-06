@@ -1,8 +1,14 @@
+-- =========================
+-- LSP Zero + Mason + CMP Setup
+-- =========================
+
 local lsp_zero = require('lsp-zero')
 
+-- Attach function for LSP keymaps
 lsp_zero.on_attach(function(client, bufnr)
   local opts = {buffer = bufnr, remap = false}
 
+  -- LSP keymaps
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
   vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
   vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
@@ -15,57 +21,70 @@ lsp_zero.on_attach(function(client, bufnr)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
+-- Customize diagnostic signs
 lsp_zero.set_sign_icons({
   error = '✘',
-  warn = '▲',
-  hint = '⚑',
-  info = '»'
+  warn  = '▲',
+  hint  = '⚑',
+  info  = '»'
 })
 
-
-require('mason').setup({})
-
+-- =========================
+-- Mason Setup
+-- =========================
+require('mason').setup()
 require('mason-lspconfig').setup({
-  ensure_installed = {'ts_ls', 'rust_analyzer','pyright', 'pylsp', 'clangd','eslint'},
-  handlers = {
-    lsp_zero.default_setup,
-    lua_ls = function()
-      local lua_opts = lsp_zero.nvim_lua_ls()
-      require('lspconfig').lua_ls.setup(lua_opts)
-    end,
-  }
+  ensure_installed = { 'ts_ls', 'rust_analyzer', 'pyright', 'pylsp', 'clangd', 'eslint'},
 })
 
-require("lspconfig").pyright.setup({
-  settings = {
-    python = {
-      pythonPath = "/usr/local/bin/python3"
-    }
-  }
-})
-
-require("lspconfig").pylsp.setup{
-  settings = {
-    pylsp = {
-      plugins = {
-        pycodestyle = {
-          ignore = { "W291", "W391", "E501" },  -- ignore trailing spaces, blank line at EOF, line too long
-          maxLineLength = 120,                   -- optional
-        },
-        flake8 = {
-          ignore = { "W291", "W391", "E501" },
-        },
-        mccabe = { enabled = false },            -- optional: disable complexity warnings
-        pyflakes = { enabled = true },           -- keep important warnings
-        pylsp_mypy = { enabled = true },         -- keep type checking
+-- =========================
+-- LSP Config using new API
+-- =========================
+local servers = {
+  -- key = server_name, value = optional config table
+  lua_ls = lsp_zero.nvim_lua_ls(),  -- special lua setup
+  pyright = {
+    settings = {
+      python = {
+        pythonPath = "/usr/local/bin/python3"
       }
     }
-  }
+  },
+  pylsp = {
+    settings = {
+      pylsp = {
+        plugins = {
+          pycodestyle = {
+            ignore = { "W291", "W391", "E501" },
+            maxLineLength = 120,
+          },
+          flake8 = { ignore = { "W291", "W391", "E501" } },
+          mccabe = { enabled = false },
+          pyflakes = { enabled = true },
+          pylsp_mypy = { enabled = true },
+        }
+      }
+    }
+  },
+  tsserver = {},
+  rust_analyzer = {},
+  clangd = {},
+  eslint = {},
 }
 
+-- Apply the configuration and enable servers
+for server, config in pairs(servers) do
+  vim.lsp.config(server, vim.tbl_extend("force", {
+    on_attach = lsp_zero.on_attach,
+  }, config))
+end
 
+-- Enable all servers
+vim.lsp.enable(vim.tbl_keys(servers))
 
-
+-- =========================
+-- CMP Setup
+-- =========================
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 
@@ -83,3 +102,4 @@ cmp.setup({
     ['<C-Space>'] = cmp.mapping.complete(),
   }),
 })
+

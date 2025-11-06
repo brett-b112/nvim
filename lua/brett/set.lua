@@ -44,3 +44,10 @@ vim.opt.clipboard = unnamedplus
 
 -- Auto reload the buffer when saving
 vim.opt.autoread = true
+
+-- This ensures that it is the correct python
+vim.g.python3_host_prog = "/usr/local/bin/python3"
+
+-- Update the PATH so that Neovim uses the right Python version
+vim.env.PATH = "/usr/local/bin:" .. vim.env.PATH
+

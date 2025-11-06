@@ -26,7 +26,7 @@ lsp_zero.set_sign_icons({
 require('mason').setup({})
 
 require('mason-lspconfig').setup({
-  ensure_installed = {'ts_ls', 'rust_analyzer','pyright', 'pylsp','clangd','eslint'},
+  ensure_installed = {'ts_ls', 'rust_analyzer','pyright', 'pylsp', 'clangd','eslint'},
   handlers = {
     lsp_zero.default_setup,
     lua_ls = function()
@@ -35,6 +35,36 @@ require('mason-lspconfig').setup({
     end,
   }
 })
+
+require("lspconfig").pyright.setup({
+  settings = {
+    python = {
+      pythonPath = "/usr/local/bin/python3"
+    }
+  }
+})
+
+require("lspconfig").pylsp.setup{
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          ignore = { "W291", "W391", "E501" },  -- ignore trailing spaces, blank line at EOF, line too long
+          maxLineLength = 120,                   -- optional
+        },
+        flake8 = {
+          ignore = { "W291", "W391", "E501" },
+        },
+        mccabe = { enabled = false },            -- optional: disable complexity warnings
+        pyflakes = { enabled = true },           -- keep important warnings
+        pylsp_mypy = { enabled = true },         -- keep type checking
+      }
+    }
+  }
+}
+
+
+
 
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}

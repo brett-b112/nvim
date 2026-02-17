@@ -1,2 +1,0 @@
--- To use emmett all you have to do is type <C-y> + ,
--- control y and comma after your command will complete it it is the same as normal emmett at this point

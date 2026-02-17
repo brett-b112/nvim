@@ -24,6 +24,9 @@ vim.opt.undofile = true
 
 vim.opt.termguicolors = true
 
+-- Disable native vim syntax highlighting
+vim.cmd('syntax off')
+
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "no"
 vim.opt.isfname:append("@-@")

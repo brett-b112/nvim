@@ -20,7 +20,7 @@ Personal Neovim configuration using [lazy.nvim](https://github.com/folke/lazy.nv
 │       ├── rose-pine.lua       -- Rose Pine colorscheme (moon variant)
 │       ├── telescope.lua       -- Fuzzy finder
 │       ├── tmux-navigator.lua  -- Tmux pane navigation
-│       ├── treesitter.lua      -- Syntax highlighting
+│       ├── treesitter.lua      -- Treesitter (highlighting disabled)
 │       └── undotree.lua        -- Undo history viewer
 └── lazy-lock.json              -- Plugin lock file
 ```
@@ -172,8 +172,8 @@ HTML/CSS abbreviation expansion via emmet-vim (default mappings).
 | `<C-y>N` | Insert | Jump to previous edit point |
 | `<C-y>/` | Insert | Toggle comment on tag |
 
-## Treesitter Parsers
+## Treesitter
 
-Auto-installed: `python`, `javascript`, `c`, `lua`, `vim`, `vimdoc`, `query`, `vue`, `html`, `css`
+Treesitter parsers are auto-installed (`python`, `javascript`, `c`, `lua`, `vim`, `vimdoc`, `query`, `vue`, `html`, `css`) but **syntax highlighting is disabled** (both Treesitter and native Vim syntax). Parsers remain available for other Treesitter features like text objects and incremental selection.
 
 Install additional parsers with `:TSInstall <language>`.

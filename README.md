@@ -48,7 +48,7 @@ lazy.nvim bootstraps itself automatically on first launch. All plugins will be i
 nvim
 ```
 
-Mason will auto-install the following LSP servers: `ts_ls`, `rust_analyzer`, `pyright`, `pylsp`, `clangd`, `eslint`.
+Mason will auto-install the following LSP servers: `ts_ls`, `rust_analyzer`, `basedpyright`, `clangd`, `eslint`, `ruby_lsp`.
 
 ## Key Mappings
 
@@ -120,7 +120,7 @@ Language server support via lsp-zero v3, Mason, and nvim-cmp.
 | `<C-y>` | Insert | Confirm completion |
 | `<C-Space>` | Insert | Trigger completion menu |
 
-**Auto-installed servers (Mason):** `ts_ls`, `rust_analyzer`, `pyright`, `pylsp`, `clangd`, `eslint`
+**Auto-installed servers (Mason):** `ts_ls`, `rust_analyzer`, `basedpyright`, `clangd`, `eslint`, `ruby_lsp`
 
 ### Fugitive (`lua/brett/plugins/fugitive.lua`)
 
@@ -172,8 +172,20 @@ HTML/CSS abbreviation expansion via emmet-vim (default mappings).
 | `<C-y>N` | Insert | Jump to previous edit point |
 | `<C-y>/` | Insert | Toggle comment on tag |
 
+## Syntax Highlighting
+
+This config uses **LSP semantic token highlighting** — NOT treesitter highlighting or Vim's built-in `syntax` (both are explicitly disabled). All code coloring comes from LSP servers that support semantic tokens (e.g. `clangd`, `basedpyright`, `ruby_lsp`). If a language has no LSP server configured, or its server doesn't support semantic tokens, that filetype will have no highlighting.
+
+## Adding a New LSP Server
+
+1. Add the server name to `ensure_installed` in `lua/brett/plugins/lsp.lua`
+2. Add a corresponding entry in the `servers` table in the same file
+3. Restart Neovim — Mason will install it automatically
+
+Find available server names with `:Mason` or at [mason-lspconfig](https://github.com/williamboman/mason-lspconfig.nvim#available-lsp-servers).
+
 ## Treesitter
 
-Treesitter parsers are auto-installed (`python`, `javascript`, `c`, `lua`, `vim`, `vimdoc`, `query`, `vue`, `html`, `css`) but **syntax highlighting is disabled** (both Treesitter and native Vim syntax). Parsers remain available for other Treesitter features like text objects and incremental selection.
+Treesitter parsers are auto-installed (`python`, `javascript`, `c`, `lua`, `vim`, `vimdoc`, `query`, `vue`, `html`, `css`) but **highlighting is disabled**. Parsers remain available for other Treesitter features like text objects and incremental selection.
 
 Install additional parsers with `:TSInstall <language>`.

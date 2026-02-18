@@ -33,6 +33,9 @@ return {
             end,
         })
 
+        -- Global K mapping so it always uses LSP hover, never keywordprg (ri, man, etc.)
+        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, { desc = "LSP Hover" })
+
         lsp_zero.set_sign_icons({
             error = '✘',
             warn  = '▲',
@@ -49,14 +52,32 @@ return {
         })
 
         require("mason").setup()
+
+        -- Mason auto-installs these LSP servers on first launch.
+        -- To add a new language server:
+        --   1. Add the server name to ensure_installed below
+        --   2. Add a corresponding entry in the servers table
+        --   3. Restart Neovim — Mason will install it automatically
+        -- Find available server names with :Mason or at:
+        -- https://github.com/williamboman/mason-lspconfig.nvim#available-lsp-servers
         require("mason-lspconfig").setup({
-            ensure_installed = { "ts_ls", "rust_analyzer", "pyright", "clangd", "eslint" },
+            ensure_installed = { "ts_ls", "rust_analyzer", "basedpyright", "clangd", "eslint", "ruby_lsp" },
         })
 
+        -- LSP server configurations.
+        -- Each key is a server name matching ensure_installed above.
+        -- Highlighting comes from LSP semantic tokens (NOT treesitter or vim syntax).
+        -- The server must support semantic tokens for highlighting to work
+        -- (e.g. clangd, basedpyright, ruby_lsp do; pyright does not).
         local servers = {
             lua_ls = lsp_zero.nvim_lua_ls(),
-            pyright = {
+            basedpyright = {
                 settings = {
+                    basedpyright = {
+                        analysis = {
+                            typeCheckingMode = "basic",
+                        },
+                    },
                     python = {
                         pythonPath = "/usr/local/bin/python3",
                     },
@@ -66,6 +87,7 @@ return {
             rust_analyzer = {},
             clangd = {},
             eslint = {},
+            ruby_lsp = {},
         }
 
         for server, config in pairs(servers) do

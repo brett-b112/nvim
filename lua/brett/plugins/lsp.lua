@@ -40,9 +40,17 @@ return {
             info  = '»',
         })
 
+        -- Show diagnostics inline as virtual text at end of line
+        vim.diagnostic.config({
+            virtual_text = true,
+            signs = false,
+            underline = true,
+            update_in_insert = false,
+        })
+
         require("mason").setup()
         require("mason-lspconfig").setup({
-            ensure_installed = { "ts_ls", "rust_analyzer", "pyright", "pylsp", "clangd", "eslint" },
+            ensure_installed = { "ts_ls", "rust_analyzer", "pyright", "clangd", "eslint" },
         })
 
         local servers = {
@@ -51,22 +59,6 @@ return {
                 settings = {
                     python = {
                         pythonPath = "/usr/local/bin/python3",
-                    },
-                },
-            },
-            pylsp = {
-                settings = {
-                    pylsp = {
-                        plugins = {
-                            pycodestyle = {
-                                ignore = { "W291", "W391", "E501" },
-                                maxLineLength = 120,
-                            },
-                            flake8 = { ignore = { "W291", "W391", "E501" } },
-                            mccabe = { enabled = false },
-                            pyflakes = { enabled = true },
-                            pylsp_mypy = { enabled = true },
-                        },
                     },
                 },
             },

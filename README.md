@@ -130,6 +130,87 @@ Git integration via vim-fugitive.
 |-----|------|--------|
 | `<leader>gs` | Normal | Open Git status window |
 
+#### Viewing Git Log and Commits
+
+1. Run `:Git log --oneline` to see compact commit history
+2. On a commit line, press `O` to open the commit in a **new tab** showing full diff
+3. Or press `<CR>` to open the commit in the current window
+4. Use `/diff` to search forward and find diff hunks within the commit buffer
+5. Press `n`/`N` to jump between diff matches
+6. Press `O` on a file path inside the commit to open that file's diff in a new tab
+
+Other log variants:
+- `:Git log --oneline --graph` — visualize branch structure
+- `:Git log --oneline -20` — limit to last 20 commits
+- `:Gclog` — load commit history into the quickfix list (navigate with `:cnext`/`:cprev`)
+
+#### Code Review Workflow (Viewing Diffs)
+
+**From the status window** (`<leader>gs`):
+
+| Key | Action |
+|-----|--------|
+| `=` | Toggle inline diff for file under cursor |
+| `dd` | Open side-by-side diff (`:Gdiffsplit`) |
+| `dv` | Open vertical diff (`:Gvdiffsplit`) |
+| `ds` or `dh` | Open horizontal diff (`:Ghdiffsplit`) |
+| `dq` | Close all diff buffers except current, turn off diff mode |
+| `dp` | Run `git diff` on file under cursor |
+
+**Reviewing a PR or branch diff:**
+
+1. `:Git diff main` — see all changes vs main branch
+2. `:Git difftool main` — load all changed files into quickfix, navigate with `:cnext`/`:cprev`
+3. `:Gdiffsplit main:%` — diff current file against the main branch version
+
+#### Opening Files from Fugitive Buffers
+
+| Key | Action |
+|-----|--------|
+| `<CR>` | Open file/object in current window |
+| `o` | Open in a new horizontal split |
+| `gO` | Open in a new vertical split |
+| `O` | Open in a **new tab** |
+| `p` | Open in preview window |
+
+#### Navigating Hunks and Files
+
+| Key | Action |
+|-----|--------|
+| `]c` | Jump to next hunk (in diff view) |
+| `[c` | Jump to previous hunk (in diff view) |
+| `)` or `<C-n>` | Jump to next file/hunk/revision |
+| `(` or `<C-p>` | Jump to previous file/hunk/revision |
+| `]m` or `]/` | Jump to next file (collapsing inline diffs) |
+| `[m` or `[/` | Jump to previous file (collapsing inline diffs) |
+
+#### Staging and Unstaging (Status Window)
+
+| Key | Action |
+|-----|--------|
+| `s` | Stage file or hunk under cursor |
+| `u` | Unstage file or hunk under cursor |
+| `-` | Toggle stage/unstage |
+| `U` | Unstage everything |
+| `X` | Discard change under cursor |
+| `cc` | Create a commit |
+| `ca` | Amend the last commit |
+
+#### Navigating Panes (Splits)
+
+Neovim splits opened by fugitive (`o`, `gO`, `dd`, `dv`, etc.) are navigated with standard Vim or tmux-navigator bindings:
+
+| Key | Action |
+|-----|--------|
+| `<C-h>` | Move to left pane |
+| `<C-j>` | Move to down pane |
+| `<C-k>` | Move to up pane |
+| `<C-l>` | Move to right pane |
+| `<C-w>o` | Close all other panes (keep current only) |
+| `<C-w>=` | Equalize pane sizes |
+| `<C-w>q` | Close current pane |
+| `gt` / `gT` | Switch to next/previous tab (for `O` new-tab opens) |
+
 ### Undotree (`lua/brett/plugins/undotree.lua`)
 
 Visual undo history browser.
